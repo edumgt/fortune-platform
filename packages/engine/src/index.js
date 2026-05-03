@@ -6,6 +6,7 @@ const { compareGunghap } = require("./domain/relations");
 const { interpretSaju } = require("./domain/interpret/scorer");
 const { calcDailyFortune } = require("./domain/daily");
 const { predict: mlPredict } = require("./ml");
+const { analyzeAgentic } = require("./agent");
 
 async function calcAll(input, ruleset) {
   const saju = await calculateSajuSolar(input);
@@ -23,6 +24,7 @@ module.exports = {
   compareGunghap,
   calcDailyFortune,
   mlPredict,
+  analyzeAgentic,
   // 저수준 함수: ml-predict 엔드포인트에서 공개 API 경계를 통해 접근
   calculateSajuSolar,
   deriveElements,
