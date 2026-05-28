@@ -44,11 +44,10 @@ async function calculateSajuSolar(input) {
     longitude,
     applyTimeCorrection,
     calendarType,
-    isLunar,
     isLeapMonth,
   } = input;
   const lib = await getLib();
-  const isLunarInput = calendarType === "lunar" || isLunar === true;
+  const isLunarInput = calendarType === "lunar";
   let solarDateUsed = { year, month, day };
   let convertedFromLunar = null;
 
