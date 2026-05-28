@@ -70,7 +70,7 @@ npx web-push generate-vapid-keys
 | POST | `/api/auth/register` | 회원가입 |
 | POST | `/api/auth/login` | 로그인 |
 | GET | `/api/auth/me` | 내 정보 (JWT 필요) |
-| POST | `/api/saju/calc` | 사주/오행/십신/대운 계산 + ML 예측(compact) |
+| POST | `/api/saju/calc` | 사주/오행/십신/대운 계산 + ML 예측(compact, 양력/음력 입력 지원) |
 | POST | `/api/saju/ml-predict` | ML/DL 상세 예측 (피처 벡터·임베딩 포함) |
 | POST | `/api/saju/agentic` | **Agentic AI** 종합 분석 (Plan→Execute→Reflect→Synthesize) |
 | POST | `/api/gunghap` | 궁합 계산 |
@@ -86,6 +86,12 @@ npx web-push generate-vapid-keys
 - `packages/engine` : 만세력 어댑터 + 오행/십신/대운/궁합/일진/오늘운세 엔진 + **ML/DL 모듈** + **Agentic AI 모듈**
 - `apps/api` : Express API 서버 (인증, 푸시, ML 예측, Agentic 분석 포함)
 - `apps/web` : Vite + Tailwind + Offcanvas 웹 앱 (로그인/회원가입 포함)
+
+## 한국천문연구원(KASI) 데이터 반영
+
+- 사주 계산은 `@fullstackfamily/manseryeok` 라이브러리를 사용하며, 해당 라이브러리는 KASI(한국천문연구원) 음양력 변환 데이터를 기반으로 구축되어 있습니다.
+- `/api/saju/calc`, `/api/saju/ml-predict`, `/api/saju/agentic` 요청에서 `calendarType: "lunar"`를 전달하면 음력 입력(윤달 포함 시 `isLeapMonth: true`)을 양력으로 변환 후 사주를 계산합니다.
+- 계산 응답에는 데이터 출처(`dataSource`)와 음력 변환 정보(`convertedFromLunar`, `solarDateUsed`)가 포함됩니다. (`/api/saju/calc`·`/api/saju/agentic`: `result.saju.meta`, `/api/saju/ml-predict`: `result.sajuMeta`)
 
 ## Agentic AI 아키텍처
 
@@ -305,4 +311,3 @@ POST /api/saju/ml-predict
 - 사주/운세는 참고용 데모입니다.
 - 대운 기산/야자시/시간보정 등은 유파별 차이가 크므로 `packages/engine/src/rulesets/standard.kr.js`에서 서비스 기준을 고정하세요.
 - 만세력 라이브러리는 2020~2030년 절기 데이터를 지원합니다. 다른 연도는 대운 시작 나이 계산 없이 대운 순서만 표시됩니다.
-
